@@ -6,7 +6,7 @@ export default function Home() {
   const [parcelas, setParcelas] = useState(10);
 
   const handleValorContaChange = (e) => {
-    const value = e.target.value.replace('R$', '').replace(',', '.');
+    const value = e.target.value.replace('R$', '').replace('.', '').replace(',', '.');
     setValorConta(parseFloat(value) || 0);
   };
 
