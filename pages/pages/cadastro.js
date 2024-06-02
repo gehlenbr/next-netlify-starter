@@ -1,6 +1,6 @@
 // pages/cadastro.js
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Cadastro() {
   const router = useRouter();
@@ -163,4 +163,3 @@ export default function Cadastro() {
     </div>
   );
 }
-
