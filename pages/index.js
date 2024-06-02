@@ -126,7 +126,7 @@ export default function Home() {
             <p className="final-value">VALOR FINAL: R$ {(valorParcela * parcelas).toFixed(2).replace('.', ',')}</p>
           </div>
           <Link href={{
-            pathname: '/cadastro',
+            pathname: 'pages/cadastro',
             query: {
               valorConta: valorConta.toFixed(2),
               parcelas,
