@@ -163,4 +163,21 @@ export default function Home() {
             <select id="forma-parcelamento" value={parcelas} onChange={handleParcelasChange}>
               {[...Array(10).keys()].map((n) => (
                 <option key={n + 1} value={n + 1}>
-                  {n + 1}X R
+                  {n + 1}X R$ {(valorConta / (n + 1)).toFixed(2).replace('.', ',')}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="summary">
+            <p><strong>RESUMO DA SUA COMPRA</strong></p>
+            <p>Valor da sua conta: R$ {valorConta.toFixed(2).replace('.', ',')}</p>
+            <p>Forma de Pagamento: Cartão de Crédito</p>
+            <p>Parcelamento: {parcelas}X R$ {valorParcela.toFixed(2).replace('.', ',')}</p>
+            <p className="final-value">VALOR FINAL: R$ {(valorParcela * parcelas).toFixed(2).replace('.', ',')}</p>
+          </div>
+          <button className="btn" onClick={handleCheckout}>CONTINUAR</button>
+        </div>
+      </body>
+    </div>
+  );
+}
