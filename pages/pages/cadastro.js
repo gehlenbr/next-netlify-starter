@@ -1,31 +1,25 @@
-// pages/cadastro.js
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useState } from 'react';
 
-export default function Cadastro() {
-  const router = useRouter();
-  const { valorConta, parcelas, valorParcela, valorFinal } = router.query;
+export default function Home() {
+  const [valorConta, setValorConta] = useState(1500);
+  const [parcelas, setParcelas] = useState(10);
 
-  const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    dataNascimento: '',
-    cpf: '',
-    telefone: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const handleValorContaChange = (e) => {
+    const value = e.target.value.replace('R$', '').replace('.', '').replace(',', '.');
+    setValorConta(parseFloat(value) || 0);
   };
+
+  const handleParcelasChange = (e) => {
+    setParcelas(parseInt(e.target.value) || 1);
+  };
+
+  const valorParcela = valorConta / parcelas;
 
   return (
     <div>
       <head>
-        <title>Cadastro</title>
+        <title>Parcelamento</title>
         <style>{`
           body {
             font-family: Arial, sans-serif;
@@ -54,7 +48,8 @@ export default function Cadastro() {
             font-weight: bold;
             margin-bottom: 5px;
           }
-          .field input {
+          .field input,
+          .field select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -77,8 +72,8 @@ export default function Cadastro() {
             margin-top: 10px;
           }
           .btn {
-            display: inline-block;
-            width: 48%;
+            display: block;
+            width: 100%;
             padding: 10px;
             text-align: center;
             background-color: #000;
@@ -89,75 +84,58 @@ export default function Cadastro() {
             margin-top: 20px;
             font-size: 16px;
           }
-          .btn-secondary {
-            background-color: #ccc;
-          }
         `}</style>
       </head>
       <body>
         <div className="container">
           <h2>Parcelamento</h2>
           <div className="field">
-            <label htmlFor="nome">Nome Completo</label>
+            <label htmlFor="valor-conta">Valor da Conta</label>
             <input
               type="text"
-              id="nome"
-              name="nome"
-              value={formData.nome}
-              onChange={handleChange}
+              id="valor-conta"
+              value={`R$ ${valorConta.toFixed(2).replace('.', ',')}`}
+              onChange={handleValorContaChange}
             />
           </div>
           <div className="field">
-            <label htmlFor="email">Seu E-mail</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
+            <label htmlFor="forma-pagamento">Forma de Pagamento</label>
+            <select id="forma-pagamento">
+              <option value="cartao">Cartão de Crédito</option>
+            </select>
           </div>
           <div className="field">
-            <label htmlFor="dataNascimento">Data de Nascimento</label>
-            <input
-              type="date"
-              id="dataNascimento"
-              name="dataNascimento"
-              value={formData.dataNascimento}
-              onChange={handleChange}
-            />
+            <label htmlFor="cupom-desconto">Cupom de Desconto</label>
+            <input type="text" id="cupom-desconto" />
           </div>
           <div className="field">
-            <label htmlFor="cpf">Seu CPF</label>
-            <input
-              type="text"
-              id="cpf"
-              name="cpf"
-              value={formData.cpf}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="telefone">Número de Telefone</label>
-            <input
-              type="text"
-              id="telefone"
-              name="telefone"
-              value={formData.telefone}
-              onChange={handleChange}
-            />
+            <label htmlFor="forma-parcelamento">Forma de Parcelamento</label>
+            <select id="forma-parcelamento" value={parcelas} onChange={handleParcelasChange}>
+              {[...Array(10).keys()].map((n) => (
+                <option key={n + 1} value={n + 1}>
+                  {n + 1}X R$ {(valorConta / (n + 1)).toFixed(2).replace('.', ',')}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="summary">
             <p><strong>RESUMO DA SUA COMPRA</strong></p>
-            <p>Valor da sua conta: R$ {valorConta}</p>
+            <p>Valor da sua conta: R$ {valorConta.toFixed(2).replace('.', ',')}</p>
             <p>Forma de Pagamento: Cartão de Crédito</p>
-            <p>Parcelamento: {parcelas}X R$ {valorParcela}</p>
-            <p className="final-value">VALOR FINAL: R$ {valorFinal}</p>
+            <p>Parcelamento: {parcelas}X R$ {valorParcela.toFixed(2).replace('.', ',')}</p>
+            <p className="final-value">VALOR FINAL: R$ {(valorParcela * parcelas).toFixed(2).replace('.', ',')}</p>
           </div>
-          <div>
-            <button className="btn">CONTINUAR</button>
-            <button className="btn btn-secondary" onClick={() => router.back()}>VOLTAR</button>
-          </div>
+          <Link href={{
+            pathname: '/cadastro',
+            query: {
+              valorConta: valorConta.toFixed(2),
+              parcelas,
+              valorParcela: valorParcela.toFixed(2),
+              valorFinal: (valorParcela * parcelas).toFixed(2),
+            },
+          }}>
+            <a className="btn">CONTINUAR</a>
+          </Link>
         </div>
       </body>
     </div>
