@@ -17,28 +17,34 @@ export default function Home() {
   const valorParcela = valorConta / parcelas;
 
   return (
-    <div>
+    <div className="container">
       <head>
         <title>Parcelamento</title>
         <style>{`
           body {
             font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
           }
           .container {
-            width: 400px;
-            margin: 50px auto;
+            width: 100%;
+            max-width: 500px;
+            margin: 20px;
             background-color: #fff;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           }
-          .container h2 {
-            font-size: 24px;
+          h2 {
+            font-size: 28px;
             margin-bottom: 20px;
             text-align: center;
+            color: #333;
           }
           .field {
             margin-bottom: 20px;
@@ -47,42 +53,56 @@ export default function Home() {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
+            color: #555;
           }
           .field input,
           .field select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            box-sizing: border-box;
+          }
+          .field input:focus,
+          .field select:focus {
+            border-color: #0070f3;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.2);
           }
           .summary {
-            background-color: #ff7f50;
-            color: #fff;
-            padding: 15px;
+            background-color: #f5f5f5;
+            padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
+            color: #333;
           }
           .summary p {
             margin: 0;
             line-height: 1.6;
           }
           .summary .final-value {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             margin-top: 10px;
           }
           .btn {
             display: block;
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             text-align: center;
-            background-color: #000;
+            background-color: #0070f3;
             color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             margin-top: 20px;
-            font-size: 16px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+          }
+          .btn:hover {
+            background-color: #005bb5;
           }
         `}</style>
       </head>
@@ -126,7 +146,7 @@ export default function Home() {
             <p className="final-value">VALOR FINAL: R$ {(valorParcela * parcelas).toFixed(2).replace('.', ',')}</p>
           </div>
           <Link href={{
-            pathname: 'pages/cadastro',
+            pathname: '/cadastro',
             query: {
               valorConta: valorConta.toFixed(2),
               parcelas,
