@@ -134,7 +134,7 @@ export default function Home() {
               valorFinal: (valorParcela * parcelas).toFixed(2),
             },
           }}>
-            <button className="btn">CONTINUAR</button>
+            <a className="btn">CONTINUAR</a>
           </Link>
         </div>
       </body>
