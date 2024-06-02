@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 export default function Home() {
   const [valorConta, setValorConta] = useState(1500);
@@ -15,6 +18,33 @@ export default function Home() {
   };
 
   const valorParcela = valorConta / parcelas;
+
+  const handleCheckout = async () => {
+    const stripe = await stripePromise;
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        valorConta: valorConta.toFixed(2),
+        parcelas,
+        valorParcela: valorParcela.toFixed(2),
+        valorFinal: (valorParcela * parcelas).toFixed(2),
+      }),
+    });
+
+    const session = await response.json();
+
+    // Redireciona para o Checkout do Stripe
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      alert(result.error.message);
+    }
+  };
 
   return (
     <div className="container">
@@ -133,31 +163,4 @@ export default function Home() {
             <select id="forma-parcelamento" value={parcelas} onChange={handleParcelasChange}>
               {[...Array(10).keys()].map((n) => (
                 <option key={n + 1} value={n + 1}>
-                  {n + 1}X R$ {(valorConta / (n + 1)).toFixed(2).replace('.', ',')}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="summary">
-            <p><strong>RESUMO DA SUA COMPRA</strong></p>
-            <p>Valor da sua conta: R$ {valorConta.toFixed(2).replace('.', ',')}</p>
-            <p>Forma de Pagamento: Cartão de Crédito</p>
-            <p>Parcelamento: {parcelas}X R$ {valorParcela.toFixed(2).replace('.', ',')}</p>
-            <p className="final-value">VALOR FINAL: R$ {(valorParcela * parcelas).toFixed(2).replace('.', ',')}</p>
-          </div>
-          <Link href={{
-            pathname: '/cadastro',
-            query: {
-              valorConta: valorConta.toFixed(2),
-              parcelas,
-              valorParcela: valorParcela.toFixed(2),
-              valorFinal: (valorParcela * parcelas).toFixed(2),
-            },
-          }}>
-            <a className="btn">CONTINUAR</a>
-          </Link>
-        </div>
-      </body>
-    </div>
-  );
-}
+                  {n + 1}X R
