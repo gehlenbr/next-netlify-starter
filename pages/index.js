@@ -1,4 +1,4 @@
-// pages/index.js
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Home() {
@@ -125,7 +125,17 @@ export default function Home() {
             <p>Parcelamento: {parcelas}X R$ {valorParcela.toFixed(2).replace('.', ',')}</p>
             <p className="final-value">VALOR FINAL: R$ {(valorParcela * parcelas).toFixed(2).replace('.', ',')}</p>
           </div>
-          <button className="btn">CONTINUAR</button>
+          <Link href={{
+            pathname: '/cadastro',
+            query: {
+              valorConta: valorConta.toFixed(2),
+              parcelas,
+              valorParcela: valorParcela.toFixed(2),
+              valorFinal: (valorParcela * parcelas).toFixed(2),
+            },
+          }}>
+            <button className="btn">CONTINUAR</button>
+          </Link>
         </div>
       </body>
     </div>
